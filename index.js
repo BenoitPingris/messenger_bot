@@ -39,7 +39,7 @@ app.get('/webhook/', (req, res) => {
 app.post('/webhook/', (req, res) => {
     if (req.body.object === 'page') {
         req.body.entry.forEach(function(entry) {
-            // Gets the message
+            // Gets the message and sender ID
             const webhookEvent = entry.messaging[0];
             const sender = webhookEvent.sender.id;
 

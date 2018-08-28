@@ -49,7 +49,7 @@ module.exports = {
             }
         });
     },
-    sendMessage: (sender, text) => {
+    async sendMessage(sender, text) {
         let data = { text: text };
 
         request({
@@ -75,5 +75,41 @@ module.exports = {
                     resolve(res['body']);
             });
         });
+    },
+    sendQuickReplies: (sender) => {
+        request({
+            uri: "https://graph.facebook.com/v2.6/me/messages",
+            qs: { "access_token": process.env.ACCESS_TOKEN },
+            method: "POST",
+            json: {
+                recipient: { 'id': sender },
+                message: {
+                    text: "Dis moi tout !",
+                    quick_replies: [
+                        {
+                            content_type: "text",
+                            title: "Recettes de cuisine",
+                            payload: "FOOD",
+                        },
+                        {
+                            content_type: "text",
+                            title: "Recette de Cocktails",
+                            payload: "DRINK"
+                        },
+                        {
+                            content_type: "text",
+                            title: "Rien !",
+                            payload: "NOTHING"
+                        }
+                    ]
+                }
+            }
+        }, (err, res, body) => {
+            if (err) {
+                console.log('Sending error');
+            } else if (res.body.error) {
+                console.log('Response body error');
+            }
+        })
     }
 }
