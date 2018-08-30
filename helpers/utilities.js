@@ -1,5 +1,4 @@
 const request = require('request');
-const https = require('https');
 
 module.exports = {
     askTemplate: text => {
@@ -49,24 +48,28 @@ module.exports = {
             }
         });
     },
-    async sendMessage(sender, text) {
+    sendMessage(sender, text) {
         let data = { text: text };
 
-        request({
-            uri: "https://graph.facebook.com/v2.6/me/messages",
-            qs: { "access_token": process.env.ACCESS_TOKEN },
-            method: "POST",
-            json: {
-                recipient: { 'id': sender },
-                message: data
-            }
-        }, (err, res, body) => {
-            if (err) {
-                console.log('Sending error');
-            } else if (res.body.error) {
-                console.log('Response body error');
-            }
-        })
+        return new Promise(resolve => {
+            resolve(
+                request({
+                    uri: "https://graph.facebook.com/v2.6/me/messages",
+                    qs: { "access_token": process.env.ACCESS_TOKEN },
+                    method: "POST",
+                    json: {
+                        recipient: { 'id': sender },
+                        message: data
+                    }
+                }, (err, res, body) => {
+                    if (err) {
+                        console.log('Sending error');
+                    } else if (res.body.error) {
+                        console.log('Response body error');
+                        console.log(res.body.error);
+                    }
+                }))
+        });
     },
     getUserInfo: psid => {
         return new Promise(resolve => {

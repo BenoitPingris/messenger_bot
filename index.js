@@ -1,4 +1,4 @@
-// Load .env file
+﻿// Load .env file
 require('dotenv').config();
 
 // Load express, body parser
